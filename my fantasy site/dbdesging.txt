@@ -1,0 +1,70 @@
+Designing a database for a Fantasy Premier League system involves identifying the entities, relationships, and attributes that are necessary to store and manage the relevant data. Here's a simplified example of a database schema for a Fantasy Premier League system:
+
+Entities:
+
+User:
+
+UserID (Primary key)
+Username
+Email
+Password
+...
+
+League:
+
+LeagueID (Primary key)
+LeagueName
+CreatorID (Foreign key referencing User.UserID)
+...
+
+Team:
+
+TeamID (Primary key)
+TeamName
+OwnerID (Foreign key referencing User.UserID)
+LeagueID (Foreign key referencing League.LeagueID)
+...
+
+Player:
+
+PlayerID (Primary key)
+FirstName
+LastName
+Position
+Team
+...
+
+Match:
+
+MatchID (Primary key)
+HomeTeamID (Foreign key referencing Team.TeamID)
+AwayTeamID (Foreign key referencing Team.TeamID)
+MatchDate
+Result
+...
+
+
+PlayerPerformance:
+
+PerformanceID (Primary key)
+PlayerID (Foreign key referencing Player.PlayerID)
+MatchID (Foreign key referencing Match.MatchID)
+GoalsScored
+Assists
+YellowCards
+RedCards
+...
+
+
+Relationships:
+
+Each User can participate in multiple Leagues.
+Each League is created by one User.
+Each User can own multiple Teams.
+Each Team belongs to one User and can be part of one League.
+Each Match involves two Teams.
+Each Player can have multiple PlayerPerformances.
+Each PlayerPerformance is associated with one Player and one Match.
+This is a basic example to illustrate the core entities and relationships in a Fantasy Premier League database. Depending on the specific requirements of your system, you may need to include additional entities, attributes, or relationships to capture more details or support additional features.
+
+It's important to note that the actual database design may require further refinement and normalization based on the specific needs and complexity of your system.
