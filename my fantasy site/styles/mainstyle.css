@@ -1,0 +1,269 @@
+*{
+    font-size: large;
+}
+body{
+    text-align: center;
+    overflow-x: hidden;
+}
+.menu{
+    width: 17%;
+    height: 95%;
+    position: absolute;
+    left: 0.5%;
+    bottom: 0.5%;
+    padding-top: 2.5%;
+    border-right: 2px solid black;
+}
+img{
+    width: 56%;
+    height: 14%;
+    margin-bottom: 5%;
+    left: 17%;
+}
+.menuul{
+    list-style-type: none;
+}
+button{
+    height: 50px;
+    width: 90%;
+    margin-top: 10%;
+    border: 2px solid black;
+    background-color: #fff;
+    color: black;
+    cursor: pointer;
+    box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
+    transition-duration: 1s;
+}
+button:hover{
+    border: none;
+    background-color: black;
+    color: white;
+}
+#active{
+    border: none;
+    background-color: black;
+    color: white;
+}
+.linx{
+    box-shadow: none;
+    border-radius: 5px;
+    margin-left: -20%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+nav{
+    padding-top: 5%;
+    display: inline;
+    width: 100%;
+    margin-left: -60%;
+    height: 2%;
+}
+.navlinx{
+    box-shadow: none;
+    border-radius: 5px;
+    margin-left: 0.5%;
+    margin-bottom: 2%;
+    margin-top: 0%;
+    font-weight: bolder;
+    width: fit-content;
+    cursor: default;
+}
+main{
+    box-shadow: none;
+    border-radius: 5px;
+    margin-left: 0.5%;
+    margin-bottom: 2%;
+    margin-top: 0%;
+    font-weight: bolder;
+    width: 40%;
+    text-align: center;
+}
+hr{
+    font-weight: bolder;
+    border: 1px solid slategrey;
+    width: 90%;
+}
+.maincontents{
+    width: 200%;
+    height: 95%;
+    position: absolute;
+    left: 18%;
+    bottom: 0.5%;
+    padding-top: 2.5%;
+    background-color: #fff;
+}
+a{
+    text-decoration: none;
+    color: black;
+    transition: 1s;
+}
+a:hover, a:active{
+    text-decoration: none;
+    color: #37915f;
+}
+video{
+    width: 25%;
+    height: 100%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-left: 1%;
+    border-radius: 2.5%;
+}
+label{
+    height: 5%;
+    width: 75%;
+    padding-bottom: 1%;
+    margin-left: 2%;
+}
+#vidlinklabel{
+    position: absolute;
+    width: 25%;
+    margin-left: 1%;
+    margin-top: 0.5%;
+}
+#vidlink{
+    text-align: left;
+    height: 29.5%;
+    width: 95%;
+    display: inline-block;
+    margin-bottom: 4.5%;
+    margin-left: 1%;
+    box-shadow: 0 1px 2px 3px rgb(148, 148, 148);
+    border-radius: 0.5%;
+}
+#grplink{
+    height: 250px;
+    width: 25%;
+    display: inline-block;
+    padding-top: 1%;
+    margin-bottom: 4.5%;
+    margin-left: 4.5%;
+    box-shadow: 0 1px 2px 3px rgb(148, 148, 148);
+    text-align: center;
+}
+label:hover{
+    cursor: pointer;
+}
+#grplink:hover, #vidlink:hover{
+    cursor: pointer;
+    box-shadow: 0 1px 2px 3px black;
+}
+#groupimage{
+    height: 75%;
+}
+#payperplaymain{
+    text-align: center;
+}
+h1{
+    border-bottom: 3px solid rgb(148, 148, 148);
+    padding-bottom: 2.5%;
+}
+input[type=submit]{
+    background-color: black;
+    width: 30%;
+    height: 45px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
+}
+#textareaID{
+    text-align: left;
+    height: 29.5%;
+    width: 95%;
+    display: inline-block;
+    margin-bottom: 4.5%;
+    margin-left: 1%;
+    border-radius: 0.5%;
+    border: 2px solid rgb(148, 148, 148);
+}
+#textareaID:hover{
+    cursor: text;
+    box-shadow: 0 1px 2px 3px black;
+}
+#help{
+    text-align: left;
+    height: 29.5%;
+    width: 90%;
+    display: inline-block;
+    margin-bottom: 4.5%;
+    margin-left: 1%;
+    padding-left: 4%;
+    padding-right: 4%;
+    box-shadow: 0 1px 2px 3px rgb(148, 148, 148);
+    border-radius: 0.5%;
+}
+.tablespan{
+    width: 100%;
+}
+table{
+    width: 100%;
+    margin-bottom: 2.5%;
+    margin: none;
+    box-shadow: 0 1px 2px 3px rgb(148, 148, 148);
+}
+thead, th{
+    background-color: #c2c2c2;
+    border: 1px solid #f7f7f7;
+}
+tr:hover,tr:nth-child(2n):hover{
+    background-color: #c2c2c2;
+    cursor: pointer;
+}
+tr:nth-child(2n){
+    background-color: #f7f7f7;
+}
+#tfout{
+    width: 10%;
+    background-color: #fff;
+}
+#tfout > button{
+    cursor: pointer;
+    border: none;
+    color: rgb(180, 44, 44);
+    background-color: none;
+    height: fit-content;
+}
+#tfout > button:hover{
+    cursor: pointer;
+    border: none;
+    color: rgb(180, 44, 44);
+    background-color: #c2c2c2;
+    height: fit-content;
+}
+#tfbtn{
+    margin-top: 2.5%;
+}
+#tf{
+    width: 10%;
+    background-color: #fff;
+}
+#tf > button{
+    cursor: pointer;
+    border: none;
+    color: rgb(44, 180, 44);
+    background-color: none;
+    height: fit-content;
+}
+#tf > button:hover{
+    cursor: pointer;
+    border: none;
+    color: rgb(44, 180, 44);
+    background-color: #c2c2c2;
+    height: fit-content;
+}
+#amountareaID{
+    text-align: left;
+    height: 50px;
+    width: 50%;
+    display: inline-block;
+    margin-bottom: 4.5%;
+    margin-left: 1%;
+    border-radius: 0.5%;
+    border: 2px solid rgb(148, 148, 148);
+    text-align: center;
+}
+#amountareaID:hover{
+    cursor: text;
+    box-shadow: 0 1px 2px 3px black;
+}
