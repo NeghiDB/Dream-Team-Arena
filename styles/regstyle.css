@@ -1,0 +1,92 @@
+*{
+    font-size: large;
+}
+body{
+    text-align: center;
+}
+div{
+    width: 30%;
+    height: 60%;
+    position: absolute;
+    left: 36%;
+    top: 5%;
+    padding-top: 2.5%;
+}
+#settingsDiv{
+    width: 30%;
+    height: 60%;
+    position: absolute;
+    left: 36%;
+    top: -5%;
+    padding-top: 5%;
+}
+img{
+    width: 50%;
+    height: 40%;
+    margin-bottom: 5%;
+}
+input{
+    height: 50px;
+    width: 90%;
+    margin-top: 5%;
+    border: none;
+}
+input[type=text],input[type=password],input[type=email],input[type=tel]{
+    border-bottom: 1px solid black;
+    margin-bottom: 5%;
+}
+input[type=submit]{
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
+    margin-bottom: 20%;
+}
+
+@media screen and (max-width: 1280px){
+    *{
+        font-size: small;
+    }
+    div{
+        width: 90%;
+        height: 60%;
+        position: absolute;
+        left: 5%;
+        top: 2.5%;
+        padding-top: 10%;
+    }
+    #settingsDiv{
+        width: 90%;
+        height: 60%;
+        position: absolute;
+        left: 5%;
+        top: 2.5%;
+        padding-top: 5%;
+    }
+    img{
+        width: 50%;
+        height: 25%;
+        margin-bottom: 0%;
+        left: 17%;
+        margin-top: 0%;
+    }
+    input{
+        height: 50px;
+        width: 70%;
+        margin-top: 2.5%;
+        margin-right: 5%;
+        margin-left: 5%;
+        border: none;
+    }
+    input[type=text],input[type=password],input[type=email],input[type=tel]{
+        border-bottom: 1px solid black;
+        margin-bottom: 5%;
+    }
+    input[type=submit]{
+        background-color: black;
+        color: white;
+        cursor: pointer;
+        height: 60px;
+        box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
+    }
+}
