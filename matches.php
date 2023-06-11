@@ -69,131 +69,22 @@ echo'
                     </thead>';
                 
                     // Query to fetch home and away team players and points
-                    $sql2 = "SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID1 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID1 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.OwnerID
-                    AND m.AwayTeamID = at.OwnerID
-                    AND (ht.OwnerID = $userid OR at.OwnerID = $userid)
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
+                    $sql = "";
+                    for ($i = 1; $i <= 11; $i++) {
+                        $sql .= "SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
+                                FROM Matches AS m
+                                JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
+                                JOIN Team AS at ON m.AwayTeamID = at.TeamID
+                                JOIN Players AS h ON ht.PlayerID$i = h.PlayerID
+                                JOIN Players AS a ON at.PlayerID$i = a.PlayerID
+                                WHERE m.HomeTeamID = ht.TeamID
+                                AND m.AwayTeamID = at.TeamID
+                                AND (ht.OwnerID = $userid OR at.OwnerID = $userid)
+                                ORDER BY m.MatchID DESC
+                                LIMIT 1;";
+                    }
 
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID2 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID2 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
-
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID3 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID3 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
-
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID4 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID4 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID5 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID5 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID6 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID6 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID7 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID7 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID8 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID8 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID9 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID9 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID10 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID10 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;
-                    SELECT h.FullName AS HomePlayerName, h.TotalPlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.TotalPlayerPoint AS AwayPlayerPoint
-                    FROM Matches AS m
-                    JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                    JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                    JOIN Players AS h ON ht.PlayerID11 = h.PlayerID
-                    JOIN Players AS a ON at.PlayerID11 = a.PlayerID
-                    WHERE m.HomeTeamID = ht.TeamID
-                    AND m.AwayTeamID = at.TeamID
-                    AND ht.OwnerID = $userid OR at.OwnerID = $userid
-                    ORDER BY m.MatchID DESC
-                    LIMIT 1;";
-
-                    $result2 = mysqli_multi_query($conn, $sql2);
+                    $result2 = mysqli_multi_query($conn, $sql);
                     if ($result2 === false) {
                     die('Query execution failed: ' . mysqli_error($conn));
                     }
@@ -231,15 +122,15 @@ echo'
             </span>
             <br> <hr> <br>
             <form action="" method="get">';
-                $sql = "SELECT m.HomeTeamID, m.AwayTeamID, t.OwnerID, 
-                (SELECT t1.TeamName FROM Team AS t1 WHERE m.HomeTeamID = t1.TeamID) AS HomeTeamName,
-                (SELECT t2.TeamName FROM Team AS t2 WHERE m.AwayTeamID = t2.TeamID) AS AwayTeamName
-                FROM Team AS t
-                JOIN Matches AS m ON t.OwnerID = $userid
-                JOIN User AS u ON t.OwnerID = u.UserID
-                WHERE t.OwnerID = $userid
-                ORDER BY m.MatchID DESC
-                LIMIT 1";
+            $sql = "SELECT m.HomeTeamID, m.AwayTeamID, t.OwnerID, 
+            (SELECT t1.TeamName FROM Team AS t1 WHERE m.HomeTeamID = t1.TeamID) AS HomeTeamName,
+            (SELECT t2.TeamName FROM Team AS t2 WHERE m.AwayTeamID = t2.TeamID) AS AwayTeamName
+            FROM Team AS t
+            JOIN Matches AS m ON t.TeamID = m.HomeTeamID OR t.TeamID = m.AwayTeamID
+            WHERE t.OwnerID = $userid
+            ORDER BY m.MatchID DESC
+            LIMIT 1";
+    
 
                 $result = mysqli_query($conn, $sql);
                 if ($result === false) {
@@ -249,17 +140,22 @@ echo'
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo '<input type="submit" value="' . $row["HomeTeamName"] . ' : '.$totalHomePlayerPoints.'"> VS <input type="submit" name="opposition" value="' . $row["AwayTeamName"] . ' : '.$totalAwayPlayerPoints.'">';
+
+                        // Add the code snippet here to assign team IDs to variables
+                        $homeTeamID = $row['HomeTeamID'];
+                        $awayTeamID = $row['AwayTeamID'];
                     }
-                    if($totalHomePlayerPoints > $totalAwayPlayerPoints){
-                        $sql = "UPDATE matches SET result = 1 WHERE HomeTeamID = team.TeamID AND team.OwnerID = $userid";
-                        $result = mysqli_query($conn,$sql);
-                    }elseif($totalHomePlayerPoints < $totalAwayPlayerPoints){
-                        $sql = "UPDATE matches SET result = 2";
-                        $result = mysqli_query($conn,$sql);
-                    }elseif($totalHomePlayerPoints = $totalAwayPlayerPoints){
-                        $sql = "UPDATE matches SET result = 0";
-                        $result = mysqli_query($conn,$sql);
+                    if ($totalHomePlayerPoints > $totalAwayPlayerPoints) {
+                        $sql = "UPDATE matches SET Result = 1 WHERE HomeTeamID = $homeTeamID";
+                        $result = mysqli_query($conn, $sql);
+                    } elseif ($totalHomePlayerPoints < $totalAwayPlayerPoints) {
+                        $sql = "UPDATE matches SET Result = 2 WHERE AwayTeamID = $awayTeamID";
+                        $result = mysqli_query($conn, $sql);
+                    } elseif ($totalHomePlayerPoints === $totalAwayPlayerPoints) {
+                        $sql = "UPDATE matches SET Result = 0 WHERE HomeTeamID = $homeTeamID OR AwayTeamID = $awayTeamID";
+                        $result = mysqli_query($conn, $sql);
                     }
+                    
                     /*$sql = "UPDATE team SET points = $totalHomePlayerPoints WHERE OwnerID = $userid";
                     $result = mysqli_query($conn,$sql);*/
                 } else {
