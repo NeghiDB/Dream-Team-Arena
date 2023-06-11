@@ -7,36 +7,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles/mainstyle.css">
-    <title>Tutorial Worlds</title>
+    <title>Dream Team Arena</title>
 </head>
 <body id="body">
-    <div class="menu">
+    <div class="menu" id="menu">
         <img src="images/DreamTeamArenaLogo.png">
         <hr>
         <ul class="menuul">
-            <a href="index.html"><button class="linx" title="Home"><li><i class="fa-solid fa-house"></i> Home</li></button></a>
+            <a href="home.php"><button class="linx" title="Home"><li><i class="fa-solid fa-house"></i> Home</li></button></a>
+            <a href="matches.php"><button class="linx" title="Matches"><li><i class="fa-solid fa-scroll"></i> Matches</li></button></a>
             <a href="subscription.html"><button class="linx" title="Deposit"><li><i class="fa-solid fa-money-bill-transfer"></i> Deposit</li></button></a>
         </ul>
         <hr>
         <ul class="menuul">
-            <a href="league.html"><button class="linx" title="League"><li><i class="fa-solid fa-users-rectangle"></i> League</li></button></a>
+            <a href="league.php"><button class="linx" title="League"><li><i class="fa-solid fa-users-rectangle"></i> League</li></button></a>
         </ul>
         <hr>
         <ul class="menuul">
-            <a href="settings.html"><button class="linx" title="Settings"><li><i class="fa-solid fa-gear"></i> Settings</li></button></a>
+            <a href="settings.php"><button class="linx" title="Settings"><li><i class="fa-solid fa-gear"></i> Settings</li></button></a>
             <a href="help.html"><button class="linx" title="Help"><li><i class="fa-sharp fa-solid fa-circle-info"></i> Help</li></button></a>
             <a href="feedback.html"><button class="linx" title="Feedback"><li><i class="fa-solid fa-comment"></i> Feedback</li></button></a>
         </ul>
         <hr>
-        <a href="withdrawal.html"><button type="submit" title="User" id="active"><i class="fa-solid fa-user"></i> Neghi 500</button></a>
+        <a href="withdrawal.html"><button type="submit" title="User" id="active"><i class="fa-solid fa-user"></i></button></a>
+        <ul class="menuul">
+            <a href="connections/logout.php"><button class="linx" title="Log out"><li><i class="fa-solid fa-right-from-bracket"></i> Log out</li></button></a>
+        </ul>
     </div>
     <div class="maincontents">
+        <span class="menubars" id="menubars" onclick="showMenu()"><img src="images/icons8-menu-24.png" alt="" srcset=""></span><br>
         <main id="payperplaymain">
-            <form action="" method="post">
+            <form action="connections/withdrawal.php" method="get">
                 <br><br><input type="number" name="Amount" id="amountareaID" placeholder="Enter Amount (e.g. 100)" min="100" step="50"><br>
                 <input type="submit" title="Withdraw" value="Withdraw" />
             </form>
         </main>
     </div>
+    <script src="javascript/index.js"></script>
 </body>
 </html>
