@@ -57,7 +57,7 @@ else{
         </nav>
         <main>
             <span class="tablespan">
-                <!-- HTML form for selecting and swapping players -->
+                <!-- HTML form for showing players list -->
                 <form action="../connections/collect_clubs.php" method="POST">
                     <table>
                         <thead>
