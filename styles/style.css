@@ -1,11 +1,14 @@
 *{
     font-size: large;
 }
+body{
+    text-align: center;
+}
 div{
-    width: 90%;
+    width: 30%;
     height: 60%;
     position: absolute;
-    left: 5%;
+    left: 36%;
     top: 2.5%;
     padding-top: 10%;
 }
@@ -16,7 +19,7 @@ img{
 }
 input{
     height: 50px;
-    width: 70%;
+    width: 90%;
     margin-top: 5%;
     border: none;
 }
@@ -28,22 +31,19 @@ input[type=submit]{
     background-color: black;
     color: white;
     cursor: pointer;
-    height: 60px;
     box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
 }
 
-@media screen and (max-width: 1280px){
+
+@media screen and (max-width: 1280px){    
     *{
         font-size: large;
     }
-    body{
-        text-align: center;
-    }
     div{
-        width: 30%;
+        width: 90%;
         height: 60%;
         position: absolute;
-        left: 36%;
+        left: 5%;
         top: 2.5%;
         padding-top: 10%;
     }
@@ -54,7 +54,7 @@ input[type=submit]{
     }
     input{
         height: 50px;
-        width: 90%;
+        width: 70%;
         margin-top: 5%;
         border: none;
     }
@@ -66,6 +66,7 @@ input[type=submit]{
         background-color: black;
         color: white;
         cursor: pointer;
+        height: 60px;
         box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
     }
 }
