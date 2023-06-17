@@ -64,7 +64,7 @@ else{
                             </thead>
                             <form action="../connections/collect_clubs.php" method="post">';
 
-                            /*Trying to link up to the player list*/
+                            // HTML form for showing teams list
                             $sql = "SELECT DISTINCT Club FROM `player` ORDER BY Club ASC";
 
                             // Execute the SQL query
@@ -112,7 +112,7 @@ else{
                 }
             </script>
 
-            <script src="javascript/index.js"></script>
+            <script src="../javascript/index.js"></script>
         </body>
         </html>';
 }
