@@ -584,16 +584,6 @@ tr:nth-child(2n){
         border-bottom: 1px solid black;
         margin-bottom: 5%;
     }
-    /*input[type=submit]{
-        background-color: black;
-        font-size: smaller;
-        width: 30%;
-        height: 45px;
-        border: none;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
-    }*/
     input[type=submit]{
         background-color: black;
         color: white;
