@@ -6,42 +6,66 @@ if (isset($_POST["credit"])) {
     $amount = $_POST["amount"];
 
     if ($userid == 'E') {
-        $sql = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (0, 'Credit', '$amount');
-                UPDATE user SET amount = (amount + $amount);";
+        $sql = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (0, 'Credit', ?);
+                UPDATE user SET amount = (amount + ?);";
     } else {
-        $sql = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES ('$userid', 'Credit', '$amount');
-                UPDATE user SET amount = amount + $amount WHERE UserID = '$userid';";
+        $sql = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (?, 'Credit', ?);
+                UPDATE user SET amount = amount + ? WHERE UserID = ?;";
     }
 
-    if (mysqli_multi_query($conn, $sql)) {
+    // Prepare the statement
+    $stmt = $conn->prepare($sql);
+
+    // Bind the parameters
+    if ($userid == 'E') {
+        $stmt->bind_param("dd", $amount, $amount);
+    } else {
+        $stmt->bind_param("sdds", $userid, $amount, $amount, $userid);
+    }
+
+    // Execute the statement
+    if ($stmt->execute()) {
         echo "<script>
             location.href='dashboard.php';
             alert('UserID $userid has been given $amount');
-            </script>";
+        </script>";
     } else {
         echo "<script>
             location.href='dashboard.php';
-            alert('Error: ' . mysqli_error($conn));
-            </script>";
+            alert('Error: ' . $stmt->error);
+        </script>";
     }
+
+    // Close the statement
+    $stmt->close();
 } elseif (isset($_POST["debit"])) {
     $userid = $_POST["userid"];
     $amount = $_POST["amount"];
 
-    $sql = "UPDATE user SET amount = amount - $amount WHERE UserID = '$userid';
-            INSERT INTO accounts (UserID, TransactionType, Amount) VALUES ('$userid', 'Debit', '$amount');";
+    $sql = "UPDATE user SET amount = amount - ? WHERE UserID = ?;
+            INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (?, 'Debit', ?);";
 
-    if (mysqli_multi_query($conn, $sql)) {
+    // Prepare the statement
+    $stmt = $conn->prepare($sql);
+
+    // Bind the parameters
+    $stmt->bind_param("dsss", $amount, $userid, $userid, $amount);
+
+    // Execute the statement
+    if ($stmt->execute()) {
         echo "<script>
             location.href='dashboard.php';
             alert('UserID $userid has been deducted $amount');
-            </script>";
+        </script>";
     } else {
         echo "<script>
             location.href='dashboard.php';
-            alert('Error: ' . mysqli_error($conn));
-            </script>";
+            alert('Error: ' . $stmt->error);
+        </script>";
     }
+
+    // Close the statement
+    $stmt->close();
 }
 
 require_once "../connections/disconnection.php";
