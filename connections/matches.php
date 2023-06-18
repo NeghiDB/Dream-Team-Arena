@@ -3,39 +3,42 @@
 
     session_start();
 
-    if(empty($_SESSION['userid'])){
+    if (empty($_SESSION['userid'])) {
         header("Location: ../index.html");
-    }
-    else{
+        exit;
+    } else {
         $userid = $_SESSION['userid'];
         $username = $_SESSION['username'];
         $amount = $_SESSION['amount'];
 
-        if (isset($_POST["start"])){
+        if (isset($_POST["start"])) {
             // Update the home team's account amount for result = 1
-            $sql = "ALTER TABLE user DROP COLUMN Plays;
-                    ALTER TABLE user ADD COLUMN Plays INT(11) DEFAULT 1;";
+            $sql = "ALTER TABLE `user` DROP COLUMN `Plays`;
+                    ALTER TABLE `user` ADD COLUMN `Plays` INT(11) DEFAULT 1;";
 
-            // Execute the query
-            if ($conn->multi_query($sql) === TRUE) {               
-                echo "<script>location.href='../admin/dashboard.php';alert('All matches have now started.')</script>";
+            $stmt = $conn->prepare($sql);
+
+            if ($stmt->execute()) {
+                $stmt->close();
+
+                // Redirect with success message
+                header("Location: ../admin/dashboard.php?success=matches-started");
+                exit;
             } else {
-                echo "Error starting matches: " . $conn->error;
+                // Log and display error message
+                error_log("Error starting matches: " . $stmt->error);
+                header("Location: ../admin/dashboard.php?error=matches-start-failed");
+                exit;
             }
-
-            // Close the database connection
-            $conn->close();
-
-        }elseif (isset($_POST["end"])){
+        } elseif (isset($_POST["end"])) {
             $sql = "UPDATE `team` AS t
                     JOIN (
                         SELECT `TeamID`, SUM(`players`.`PlayerPoint`) AS `TotalPoints`
                         FROM `players`
                         JOIN `team` ON `players`.`playerid` IN (
                             `team`.`PlayerID1`, `team`.`PlayerID2`, `team`.`PlayerID3`, `team`.`PlayerID4`, 
-                    `team`.`PlayerID5`,
-                            `team`.`PlayerID6`, `team`.`PlayerID7`, `team`.`PlayerID8`, `team`.`PlayerID9`, 
-                    `team`.`PlayerID10`, `team`.`PlayerID11`
+                            `team`.`PlayerID5`, `team`.`PlayerID6`, `team`.`PlayerID7`, `team`.`PlayerID8`, 
+                            `team`.`PlayerID9`, `team`.`PlayerID10`, `team`.`PlayerID11`
                         )
                         GROUP BY `TeamID`
                     ) AS p ON t.`TeamID` = p.`TeamID`
@@ -93,84 +96,104 @@
                         WHERE t.OwnerID = u.UserID AND m.Result = 0
                     );
                     
-                    UPDATE Team SET PlayerID1 = NULL, PlayerID2 = NULL, PlayerID3 = NULL, PlayerID4 = NULL, PlayerID5 = NULL, 
-                         PlayerID6 = NULL, PlayerID7 = NULL, PlayerID8 = NULL, PlayerID9 = NULL, PlayerID10 = NULL, PlayerID11 = NULL;
+                    UPDATE `Team` 
+                    SET PlayerID1 = NULL, PlayerID2 = NULL, PlayerID3 = NULL, PlayerID4 = NULL, PlayerID5 = NULL, 
+                        PlayerID6 = NULL, PlayerID7 = NULL, PlayerID8 = NULL, PlayerID9 = NULL, PlayerID10 = NULL, 
+                        PlayerID11 = NULL;
 
-                    ALTER TABLE user DROP COLUMN Plays;
-                    ALTER TABLE user ADD COLUMN Plays INT(11) DEFAULT 0;
+                    ALTER TABLE `user` DROP COLUMN `Plays`;
+                    ALTER TABLE `user` ADD COLUMN `Plays` INT(11) DEFAULT 0;
                     ";
 
-                    // Execute the query
-                    if ($conn->multi_query($sql) === TRUE) {
-                        // Close the database connection
-                        $conn->close();
+            $stmt = $conn->prepare($sql);
 
-                        // Connect to the database
-                        $dbhost = "localhost";
-                        $dbname = "dreamteamarena";
-                        $dbchar = "utf8";
-                        $dbuser = "root";
-                        $dbpass = "";
-                        $pdo = new PDO(
-                            "mysql:host=$dbhost;dbname=$dbname;charset=$dbchar",
-                            $dbuser, $dbpass, [
-                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-                            ]
-                        );
+            if ($stmt->execute()) {
+                $stmt->close();
 
-                        // Create an empty CSV file
-                        $fh = fopen("matches_result.csv","w");
-                        if ($fh === false) {
-                            exit("Failed to create CSV file");
-                        }
+                // Generate and download CSV file
+                generateAndDownloadCSV($conn);
+            } else {
+                // Log and display error message
+                error_log("Error ending matches: " . $stmt->error);
+                header("Location: ../admin/dashboard.php?error=matches-end-failed");
+                exit;
+            }
+        }
+    }
 
-                        // Define column headers for team table
-                        $teamHeaders = ['TeamID', 'TeamName', 'OwnerID', 'Points'];
-                        fputcsv($fh, $teamHeaders);
+    function generateAndDownloadCSV($conn) {
+        // Connect to the database using PDO
+        $dbhost = "localhost";
+        $dbname = "dreamteamarena";
+        $dbchar = "utf8";
+        $dbuser = "root";
+        $dbpass = "";
 
-                        // Get the team data from the database
-                        $teamStmt = $pdo->prepare("SELECT * FROM team");
-                        $teamStmt->execute();
+        try {
+            $pdo = new PDO(
+                "mysql:host=$dbhost;dbname=$dbname;charset=$dbchar",
+                $dbuser, $dbpass, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                ]
+            );
 
-                        // Output the team data to the CSV file
-                        while ($teamRow = $teamStmt->fetch(PDO::FETCH_NAMED)) {
-                            fputcsv($fh, [
-                                $teamRow['TeamID'], $teamRow['TeamName'], $teamRow['OwnerID'], $teamRow['Points']
-                            ]);
-                        }
+            // Create an empty CSV file
+            $filename = "matches_result.csv";
+            $fh = fopen($filename, "w");
 
-                        // Define column headers for player table
-                        $playerHeaders = ['MatchID', 'HomeTeamID', 'AwayTeamID', 'Result'];
-                        fputcsv($fh, $playerHeaders);
+            if ($fh === false) {
+                error_log("Failed to create CSV file");
+                header("Location: ../admin/dashboard.php?error=csv-creation-failed");
+                exit;
+            }
 
-                        // Get the player data from the database
-                        $playerStmt = $pdo->prepare("SELECT * FROM matches");
-                        $playerStmt->execute();
+            // Define column headers for team table
+            $teamHeaders = ['TeamID', 'TeamName', 'OwnerID', 'Points'];
+            fputcsv($fh, $teamHeaders);
 
-                        // Output the player data to the CSV file
-                        while ($playerRow = $playerStmt->fetch(PDO::FETCH_NAMED)) {
-                            fputcsv($fh, [
-                                $playerRow['MatchID'], $playerRow['HomeTeamID'], $playerRow['AwayTeamID'], $playerRow['Result']
-                            ]);
-                        }
+            // Get the team data from the database
+            $teamStmt = $pdo->prepare("SELECT * FROM `team`");
+            $teamStmt->execute();
 
-                        // Close the CSV file
-                        fclose($fh);
+            // Output the team data to the CSV file
+            while ($teamRow = $teamStmt->fetch(PDO::FETCH_NAMED)) {
+                fputcsv($fh, [
+                    $teamRow['TeamID'], $teamRow['TeamName'], $teamRow['OwnerID'], $teamRow['Points']
+                ]);
+            }
 
-                        // Set headers to download the CSV file
-                        header('Content-Type: text/csv');
-                        header('Content-Disposition: attachment; filename="matches_result.csv"');
-                        header('Content-Length: ' . filesize('matches_result.csv'));
+            // Define column headers for matches table
+            $matchesHeaders = ['MatchID', 'HomeTeamID', 'AwayTeamID', 'Result'];
+            fputcsv($fh, $matchesHeaders);
 
-                        // Send the file to the browser for download
-                        readfile('matches_result.csv');
+            // Get the matches data from the database
+            $matchesStmt = $pdo->prepare("SELECT * FROM `matches`");
+            $matchesStmt->execute();
 
-                        // Delete the CSV file from the server
-                        unlink('matches_result.csv');
-                    } else {
-                        echo "Error starting matches: " . $conn->error;
-                    }
+            // Output the matches data to the CSV file
+            while ($matchesRow = $matchesStmt->fetch(PDO::FETCH_NAMED)) {
+                fputcsv($fh, [
+                    $matchesRow['MatchID'], $matchesRow['HomeTeamID'], $matchesRow['AwayTeamID'], $matchesRow['Result']
+                ]);
+            }
 
+            // Close the CSV file
+            fclose($fh);
+
+            // Set headers to download the CSV file
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Length: ' . filesize($filename));
+
+            // Send the file to the browser for download
+            readfile($filename);
+
+            // Delete the CSV file from the server
+            unlink($filename);
+        } catch (PDOException $e) {
+            error_log("Database connection error: " . $e->getMessage());
+            header("Location: ../admin/dashboard.php?error=database-connection-failed");
+            exit;
         }
     }
 ?>
