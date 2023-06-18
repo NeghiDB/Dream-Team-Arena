@@ -1,40 +1,52 @@
 <?php
     require_once "../connections/connection.php";
 
-    if (isset($_POST["new"])){
+    if (isset($_POST["new"])) {
         $email = $_POST["email"];
         $username = $_POST["username"];
         $phone = $_POST["phone"];
         $newpassword = $_POST["newpassword"];
         $confpassword = $_POST["confpassword"];
 
-        if($newpassword===$confpassword){
-            $sql = "INSERT INTO user (email, username, phonenumber, password)
-                VALUES ('$email', '$username', '$phone', '$confpassword')";
-            if (mysqli_query($conn, $sql)) {
+        if ($newpassword === $confpassword) {
+            // Hash the password
+            $hashedPassword = password_hash($confpassword, PASSWORD_DEFAULT);
+
+            // Prepare the SQL statement using a prepared statement
+            $sql = "INSERT INTO user (email, username, phonenumber, password) VALUES (?, ?, ?, ?)";
+
+            // Prepare the statement
+            $stmt = $conn->prepare($sql);
+
+            // Bind the parameters
+            $stmt->bind_param("ssss", $email, $username, $phone, $hashedPassword);
+
+            // Execute the statement
+            if ($stmt->execute()) {
                 echo "<script>
                 location.href='dashboard.php';
                 alert('Account created successfully.');
                 </script>";
-            }
-            elseif (mysqli_errno($conn)==1062){
+            } elseif ($stmt->errno == 1062) {
                 echo "<script>
                 location.href='users.php';
-                alert('The email, phone number or username has already being used');
+                alert('The email, phone number, or username has already been used');
                 </script>";
+            } else {
+                echo "Error: " . $stmt->error;
             }
-            else {
-                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-            }
-        }else{
+
+            // Close the statement
+            $stmt->close();
+        } else {
             echo "<script>
             location.href='users.php';
-            alert('The passwords don`t match');
+            alert('The passwords don't match');
             </script>";
         }
-    }elseif (isset($_POST["update"])){
+    } elseif (isset($_POST["update"])) {
         $userid = $_POST["userid"];
-        $username = $_POST["username"]; 
+        $username = $_POST["username"];
         $email = $_POST["email"];
         $phone = $_POST["phonenumber"];
         $accountnumber = $_POST["accountnumber"];
@@ -42,39 +54,48 @@
         $newpassword = $_POST["newpassword"];
         $confpassword = $_POST["confpassword"];
 
-        if($newpassword===$confpassword){
-            $sql = "UPDATE user SET email = '$email', username = '$username', phonenumber = '$phone', password = '$confpassword',
-            accountnumber='$accountnumber', bankname='$bankname'
-            WHERE UserID = '$userid'";
-            if (mysqli_query($conn, $sql)) {
+        if ($newpassword === $confpassword) {
+            // Hash the password
+            $hashedPassword = password_hash($confpassword, PASSWORD_DEFAULT);
+
+            // Prepare the SQL statement using a prepared statement
+            $sql = "UPDATE user SET email = ?, username = ?, phonenumber = ?, password = ?, accountnumber = ?, bankname = ? WHERE UserID = ?";
+
+            // Prepare the statement
+            $stmt = $conn->prepare($sql);
+
+            // Bind the parameters
+            $stmt->bind_param("sssssss", $email, $username, $phone, $hashedPassword, $accountnumber, $bankname, $userid);
+
+            // Execute the statement
+            if ($stmt->execute()) {
                 echo "<script>
                 location.href='dashboard.php';
                 alert('Account details updated successfully.');
                 </script>";
-            }
-            elseif (mysqli_errno($conn)==1062){
+            } elseif ($stmt->errno == 1062) {
                 echo "<script>
                 location.href='users.php';
-                alert('The email, phone number or username has already being used');
+                alert('The email, phone number, or username has already been used');
                 </script>";
+            } else {
+                echo "Error: " . $stmt->error;
             }
-            else {
-                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-            }
-        }else{
+
+            // Close the statement
+            $stmt->close();
+        } else {
             echo "<script>
             location.href='users.php';
-            alert('The passwords don`t match');
+            alert('The passwords don't match');
             </script>";
         }
-    }elseif (isset($_POST["delete"])){
+    } elseif (isset($_POST["delete"])) {
         $userid = $_POST["userid"];
-        $username = $_POST["username"]; 
+        $username = $_POST["username"];
         $email = $_POST["email"];
         $phone = $_POST["phonenumber"];
-        
-        //$sql = "DELETE FROM user WHERE UserID='$userid' OR UserName='$username' OR Email='$email' OR PhoneNumber='$phone'";
-        
+
         echo '<script>
             var confirmation = confirm("Are you sure you want to delete the account?");
             if (confirmation) {
@@ -84,7 +105,6 @@
             }
         </script>';
     }
-    
 
     require_once "../connections/disconnection.php";
 ?>
