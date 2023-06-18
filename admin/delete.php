@@ -6,10 +6,17 @@ if (isset($_GET["userid"])) {
     // Retrieve the userid from the URL parameter
     $userid = $_GET["userid"];
     
-    // Perform the deletion query
-    $sql = "DELETE FROM user WHERE UserID='$userid'";
+    // Prepare the deletion query using a prepared statement
+    $sql = "DELETE FROM user WHERE UserID = ?";
     
-    if (mysqli_query($conn, $sql)) {
+    // Prepare the statement
+    $stmt = $conn->prepare($sql);
+    
+    // Bind the userid parameter
+    $stmt->bind_param("i", $userid);
+    
+    // Execute the statement
+    if ($stmt->execute()) {
         // Deletion successful
         echo "<script>
             location.href='dashboard.php';
@@ -17,8 +24,11 @@ if (isset($_GET["userid"])) {
         </script>";
     } else {
         // Deletion failed
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        echo "Error: " . $stmt->error;
     }
+    
+    // Close the statement
+    $stmt->close();
 } else {
     // If the userid parameter is not provided, handle the error appropriately
     echo "Invalid request.";
