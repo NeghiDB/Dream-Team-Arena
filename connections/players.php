@@ -8,8 +8,8 @@ $amount = $_SESSION['amount'];
 $plays = $_SESSION['plays'];
 
 if (isset($_POST["play"])) {
-    if ($amount >= 500 && $plays < 1){
-        $sql = "SELECT TeamID, OwnerID, PlayerID1, PlayerID2, PlayerID3, PlayerID4, PlayerID5, PlayerID6, PlayerID7, PlayerID8, PlayerID9, PlayerID10, PlayerID11
+    if ($amount >= 500 && $plays < 1) {
+        $sql = "SELECT TeamID, OwnerID
         FROM team
         WHERE OwnerID = $userid
         ORDER BY TeamID DESC
@@ -21,75 +21,98 @@ if (isset($_POST["play"])) {
         }
 
         if (mysqli_num_rows($result) > 0) {
-            // Check if there is a row with a non-NULL HomeTeamID
-            $checkSql = "SELECT COUNT(*) FROM Matches WHERE HomeTeamID IS NOT NULL AND AwayTeamID IS NULL";
-            $checkResult = mysqli_query($conn, $checkSql);
-            if ($checkResult === false) {
+            $row = mysqli_fetch_assoc($result);
+            $teamID = $row['TeamID'];
+            
+            // Check if there is an available match slot
+            $matchSql = "SELECT MatchID, HomeTeamID FROM matches WHERE HomeTeamID IS NULL AND AwayTeamID IS NULL LIMIT 1";
+            $matchResult = mysqli_query($conn, $matchSql);
+            
+            if ($matchResult === false) {
                 die('Query execution failed: ' . mysqli_error($conn));
             }
-
-            $rowCount = mysqli_fetch_row($checkResult)[0];
-
-            if ($rowCount > 0) {
-                $row = mysqli_fetch_assoc($result);
-                $awayTeamID = $row['TeamID'];
-                // Update the last row with the AwayTeamID
-                $updateSql = "UPDATE Matches SET AwayTeamID = $awayTeamID WHERE AwayTeamID IS NULL";
+            
+            if (mysqli_num_rows($matchResult) > 0) {
+                $matchRow = mysqli_fetch_assoc($matchResult);
+                $matchID = $matchRow['MatchID'];
+                
+                // Update the match with the home team ID
+                $updateSql = "UPDATE matches SET HomeTeamID = $teamID WHERE MatchID = $matchID";
                 $updateResult = mysqli_query($conn, $updateSql);
+                
                 if ($updateResult === false) {
                     die('Query execution failed: ' . mysqli_error($conn));
                 }
+                
+                if (mysqli_affected_rows($conn) > 0) {
+                    echo "<script>
+                            location.href='../matches.php';
+                            alert('You have been matched.');
+                        </script>";
+                    $_SESSION['amount'] = $amount - 500;
+                    $_SESSION['plays'] = $plays + 1;
+                    
+                    $updateSql = "UPDATE user SET Amount = ($amount - 500), Plays = ($plays + 1) WHERE UserID = $userid";
+                    $updateResult = mysqli_query($conn, $updateSql);
+                    
+                    if ($updateResult === false) {
+                        die('Query execution failed: ' . mysqli_error($conn));
+                    }
+                } else {
+                    echo "<script>
+                            alert('No available slots for teams.');
+                            window.open('../home.php','_self');
+                        </script>";
+                }
             } else {
-                $row = mysqli_fetch_assoc($result);
-                $homeTeamID = $row['TeamID'];
-                $insertSql = "INSERT INTO Matches (HomeTeamID) VALUES ($homeTeamID)";
+                // Insert a new match with the home team ID
+                $insertSql = "INSERT INTO matches (HomeTeamID) VALUES ($teamID)";
                 $insertResult = mysqli_query($conn, $insertSql);
+
                 if ($insertResult === false) {
                     die('Query execution failed: ' . mysqli_error($conn));
                 }
-            }
 
-            if (mysqli_affected_rows($conn) > 0) {
-                echo "<script>
-                        location.href='../matches.php';
-                        alert('You have been matched.');
-                    </script>";
-                $_SESSION['amount'] = $amount - 500;
-                $_SESSION['plays'] = $plays + 1;
-                $updateSql = "UPDATE User SET Amount = ($amount - 500) WHERE UserID = $userid;
-                UPDATE User SET Plays = ($plays + 1) WHERE UserID = $userid;";
-                $updateResult = mysqli_multi_query($conn, $updateSql);
-            } else {
-                echo "<script>
-                        alert('No available slots for teams.');
-                        window.open('../home.php','_self');
-                    </script>";
+                if (mysqli_affected_rows($conn) > 0) {
+                    echo "<script>
+                            location.href='../matches.php';
+                            alert('You have been matched.');
+                        </script>";
+                    $_SESSION['amount'] = $amount - 500;
+                    $_SESSION['plays'] = $plays + 1;
+                    
+                    $updateSql = "UPDATE user SET Amount = ($amount - 500), Plays = ($plays + 1) WHERE UserID = $userid";
+                    $updateResult = mysqli_query($conn, $updateSql);
+                    
+                    if ($updateResult === false) {
+                        die('Query execution failed: ' . mysqli_error($conn));
+                    }
+                } else {
+                    echo "<script>
+                            alert('Failed to create a new match.');
+                            window.open('../home.php','_self');
+                        </script>";
+                }
             }
         } else {
             echo "<script>alert('You do not have a complete team yet.');
                 window.open('../playersList.php','_self');</script>";
         }
-    }
-    elseif($plays > 0){
+    } elseif ($plays > 0) {
         echo "<script>alert('You have already been matched.');
         window.open('../home.php','_self');</script>";
-    }
-    else{
+    } else {
         echo "<script>alert('Insufficient funds. You need about 500 naira to play.');
         window.open('https://paystack.com/pay/yqfni0l88j','_self');</script>";
     }
     
-}
-elseif (isset($_POST["choose"])) {
+} elseif (isset($_POST["choose"])) {
     echo "<script>window.open('../playersList.php','_self');</script>";
-}
-elseif (isset($_POST["addTeam"])) {
+} elseif (isset($_POST["addTeam"])) {
     echo "<script>window.open('../teamsList.php','_self');</script>";
-}
-elseif (isset($_POST["removeTeam"])) {
+} elseif (isset($_POST["removeTeam"])) {
     echo "<script>window.open('../teamsList.php','_self');</script>";
-}
-elseif (isset($_POST["change"])) {
+} elseif (isset($_POST["change"])) {
     $sql = "SELECT * FROM team WHERE OwnerID = $userid";
     $result = mysqli_query($conn, $sql);
     if ($result === false) {
@@ -98,8 +121,7 @@ elseif (isset($_POST["change"])) {
 
     if (mysqli_num_rows($result) > 0) {
         echo "<script>window.open('../home.php','_self');alert('You already have a team previously registered.');</script>";
-    }
-    else {
+    } else {
         $selectedPlayers = $_POST['players'];
 
         // Check if the number of selected players is not more than 11
@@ -129,9 +151,9 @@ elseif (isset($_POST["change"])) {
         
             // Check if the binding is successful
             if ($bindResult === false) {
-                //die('Error binding parameters: ' . $insertQuery->error);
                 echo "<script>window.open('../playersList.php','_self');
                 alert(`You haven't selected enough players.`);</script>";
+                exit;
             }
         
             // Execute the insert query
@@ -148,8 +170,7 @@ elseif (isset($_POST["change"])) {
             echo "You can only select a maximum of 11 players.";
         }
     }
-}
-elseif (isset($_POST["clearFeedback"])) {
+} elseif (isset($_POST["clearFeedback"])) {
     $sql = "DELETE FROM Feedback";
     $result = $conn->query($sql);
     if ($result === false) {
@@ -158,8 +179,7 @@ elseif (isset($_POST["clearFeedback"])) {
 
     if (mysqli_num_rows($result) > 0) {
         echo "<script>window.open('../admin/feedback.php','_self');alert('Feedback successfully cleared.');</script>";
-    }
-    else {
+    } else {
         echo "<script>window.open('../admin/feedback.php','_self');alert('No feedback to clear.');</script>";
     }
 }
