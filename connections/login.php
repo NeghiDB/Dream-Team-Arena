@@ -5,52 +5,68 @@ if (isset($_POST["login"])){
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $sql = "SELECT * FROM user
-        WHERE Binary Email='$email' AND Binary Password='$password'";
+    // Use prepared statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM user WHERE Binary Email=?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    $result = mysqli_query($conn, $sql);
     if ($result === false) {
-        die('Query execution failed: ' . mysqli_error($conn));
+        die('Query execution failed: ' . $stmt->error);
     }
 
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        session_start();
-        $_SESSION['userid'] = $row["UserID"];
-        $_SESSION['username'] = $row["UserName"];
-        $_SESSION['phonenumber'] = $row["PhoneNumber"];
-        $_SESSION['email'] = $row["Email"];
-        $_SESSION['amount'] = $row["Amount"];
-        $_SESSION['plays'] = $row["Plays"];
-        
-        header("Location:../home.php");
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $hashedPassword = $row["Password"];
+
+        if (password_verify($password, $hashedPassword)) {
+            session_start();
+            $_SESSION['userid'] = $row["UserID"];
+            $_SESSION['username'] = $row["UserName"];
+            $_SESSION['phonenumber'] = $row["PhoneNumber"];
+            $_SESSION['email'] = $row["Email"];
+            $_SESSION['amount'] = $row["Amount"];
+            $_SESSION['plays'] = $row["Plays"];
+
+            $stmt->close();
+
+            header("Location:../home.php");
+            exit;
+        } else {
+            echo "<script>alert('The email or password is incorrect');
+            window.open('../login.html','_self');</script>";
+        }
     }
     else {
         echo "<script>alert('The email or password does not exist');
         window.open('../login.html','_self');</script>";
     }
+
+    $stmt->close();
 }
 elseif (isset($_POST["forgotpassword"])){
     $email = $_POST["email"];
-    
-    $sql = "SELECT * FROM user
-        WHERE Binary Email='$email'";
 
-    $result = mysqli_query($conn, $sql);
+    // Use prepared statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM user WHERE Binary Email=?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
     if ($result === false) {
-        die('Query execution failed: ' . mysqli_error($conn));
+        die('Query execution failed: ' . $stmt->error);
     }
 
-    if (mysqli_num_rows($result) > 0) {
+    if ($result->num_rows > 0) {
         $otp = rand(00000000,99999999);
-        $sql1 = "UPDATE user SET OTP = '$otp' WHERE Email = '$email'";
-        
-        if (mysqli_query($conn, $sql1)) {
-            echo "<script>alert('A password reset link has been sent to your mail');
+        $updateSql = "UPDATE user SET OTP = '$otp' WHERE Email = '$email'";
+
+        if (mysqli_query($conn, $updateSql)) {
+            echo "<script>alert('A password reset link has been sent to your email');
                 window.open('../forgotpassword.html','_self');</script>";
         }
         else {
-            echo "Error: " . $sql1 . "<br>" . mysqli_error($conn);
+            echo "Error: " . $updateSql . "<br>" . mysqli_error($conn);
         }
 
         /*
@@ -63,6 +79,8 @@ elseif (isset($_POST["forgotpassword"])){
         echo "<script>alert('The email does not exist');
         window.open('../forgotpassword.html','_self');</script>";
     }
+
+    $stmt->close();
 }
 elseif (isset($_POST["resetpassword"])) {
     $email = $_POST["email"];
@@ -70,17 +88,24 @@ elseif (isset($_POST["resetpassword"])) {
     $password = $_POST["newpassword"];
     $confirmpassword = $_POST["confirmpassword"];
 
-    $sql = "SELECT * FROM user WHERE Email = '$email' AND OTP = '$onetimepass'";
-    $result = mysqli_query($conn, $sql);
+    // Use prepared statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM user WHERE Email = ? AND OTP = ?");
+    $stmt->bind_param("ss", $email, $onetimepass);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (mysqli_num_rows($result) > 0) {
+    if ($result->num_rows > 0) {
         if ($password === $confirmpassword) {
-            $updateSql = "UPDATE user SET Password = '$password', OTP = 0 WHERE Email = '$email' AND OTP = '$onetimepass'";
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            if (mysqli_query($conn, $updateSql)) {
+            $updateSql = "UPDATE user SET Password = ?, OTP = 0 WHERE Email = ? AND OTP = ?";
+            $stmt = $conn->prepare($updateSql);
+            $stmt->bind_param("sss", $hashedPassword, $email, $onetimepass);
+
+            if ($stmt->execute()) {
                 echo "<script>alert('Your account password has been reset. You can log in now.');location.href='../login.html';</script>";
             } else {
-                echo "Error updating password: " . mysqli_error($conn);
+                echo "Error updating password: " . $stmt->error;
             }
         } else {
             echo "<script>alert('The account passwords do not match'); location.href='../resetpassword.html';</script>";
@@ -88,8 +113,9 @@ elseif (isset($_POST["resetpassword"])) {
     } else {
         echo "<script>alert('Invalid email or OTP'); location.href='../resetpassword.html';</script>";
     }
-}
 
+    $stmt->close();
+}
 
 require_once "disconnection.php";
 ?>
