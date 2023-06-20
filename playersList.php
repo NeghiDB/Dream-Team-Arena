@@ -1,21 +1,14 @@
 <?php
     require_once "connections/connection.php";
-?>
-
-<?php
     session_start();
 
     if(empty($_SESSION['userid'])){
         header("Location: index.html");
+        exit;
     }
-    else{
-        $userid = $_SESSION['userid'];
-        $username = $_SESSION['username'];
-        $amount = $_SESSION['amount'];
-    }
+?>
 
-
-echo'<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -48,12 +41,11 @@ echo'<!DOCTYPE html>
             <a href="feedback.html"><button class="linx" title="Feedback"><li><i class="fa-solid fa-comment"></i> Feedback</li></button></a>
         </ul>
         <hr>
-        <a href="withdrawal.html"><button type="submit" title="User"><i class="fa-solid fa-user"></i> '.$username.' '.$amount.'</button></a>
+        <a href="withdrawal.html"><button type="submit" title="User"><i class="fa-solid fa-user"></i> <?= $_SESSION['username'] ?> <?= $_SESSION['amount'] ?></button></a>
         <ul class="menuul">
             <a href="connections/logout.php"><button class="linx" title="Log out"><li><i class="fa-solid fa-right-from-bracket"></i> Log out</li></button></a>
         </ul>
-    </div>';
-?>
+    </div>
     <div class="maincontents">
         <span class="menubars" id="menubars" onclick="showMenu()"><img src="images/icons8-menu-24.png" alt="" srcset=""></span><br>
         <nav>
@@ -70,13 +62,6 @@ echo'<!DOCTYPE html>
                                 <th>Player Name</th>
                                 <th title="Position">Pos.</th>
                                 <th>Team Name</th>
-                                <th>Opponent</th>
-                                <th title="Goals Scored">GS</th>
-                                <th title="Assists">A</th>
-                                <th title="Yellow Card">YC</th>
-                                <th title="Red Card">RC</th>
-                                <th title="Clean Sheet">CS</th>
-                                <th>Minute</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,25 +80,12 @@ echo'<!DOCTYPE html>
                                 $playerName = $row['FullName'];
                                 $teamName = $row['Club'];
                                 $position = $row['Position'];
-                                $gs = $row['GoalsScored'];
-                                $asst = $row['Assists'];
-                                $yc = $row['YellowCards'];
-                                $rc = $row['RedCards'];
-                                $cs = $row['CleanSheet'];
-                                $min = $row['Minute'];
 
                                 echo "<tr>
                                         <td><input type='checkbox' name='players[]' value='$playerID'></td>
                                         <td class='player-row'>$playerName</td>
                                         <td title='Position'>$position</td>
                                         <td>$teamName</td>
-                                        <td>$position</td>
-                                        <td title='Goals Scored'>$gs</td>
-                                        <td title='Assists'>$asst</td>
-                                        <td title='Yellow Card'>$yc</td>
-                                        <td title='Red Card'>$rc</td>
-                                        <td title='Clean Sheet'>$cs</td>
-                                        <td>$min</td>
                                     </tr>";
                             }
                             ?>
