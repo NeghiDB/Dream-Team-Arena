@@ -2,7 +2,6 @@
     require_once "connection.php";
 
     session_start();
-    $userid = $_SESSION['userid'];
 
     if (isset($_POST["signup"])){
         $email = $_POST["email"];
@@ -51,6 +50,7 @@
 
         $stmt->close();
     } elseif (isset($_POST["update"])){
+        $userid = $_SESSION['userid'];
         $userid1 = $userid;
         $username = $_POST["username"]; 
         $email = $_POST["email"];

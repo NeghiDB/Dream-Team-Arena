@@ -8,7 +8,7 @@
         $comments = $_GET['comments'];
 
         // Prepare the SQL statement to prevent SQL injection
-        $sql = "INSERT INTO Feedback (Text, UserID) 
+        $sql = "INSERT INTO feedback (Text, UserID) 
                 VALUES (?, ?)";
 
         $stmt = $conn->prepare($sql);

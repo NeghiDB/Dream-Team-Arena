@@ -41,9 +41,6 @@
                 <hr>
                 <ul class="menuul">
                     <a href="notification.php"><button class="linx" title="Notifications"><li><i class="fa-solid fa-bell"></i> Notifications</li></button></a>
-                    <!--<a href="feedback.php"><button class="linx" title="Feedback"><li><i class="fa-solid fa-comment"></i> Feedbacks</li></button></a>
-                    <a href="withdrawal.php"><button class="linx" title="Feedback"><li><i class="fa-solid fa-comment"></i> Withdrawals</li></button></a>
-                    <a href="otp.php"><button class="linx" title="Feedback"><li><i class="fa-solid fa-comment"></i> OTP</li></button></a>-->
                 </ul>
                 <hr>
                 <ul class="menuul">
@@ -57,30 +54,35 @@
                 </nav>
                 <span class="menubars" id="menubars" onclick="showMenu()"><img src="../images/icons8-menu-24.png" alt="" srcset=""></span><br>
                 <main id="payperplaymain">';
+                    // Prepare the SQL statements
                     $sql = "SELECT COUNT(UserID) AS TotalUsers FROM user;
-                    SELECT COUNT(MatchID) AS TotalMatches FROM Matches;
-                    SELECT COUNT(FeedbackID) AS TotalFeedbacks FROM Feedback;
-                    SELECT COUNT(WithdrawalID) AS TotalWithdrawal FROM Withdrawal;";
-                   
-                   if ($conn->multi_query($sql)) {
-                       $results = array(); // Array to store the results
-                       // Fetch each result set and store it in the array
-                       do {
-                           if ($result = $conn->store_result()) {
-                               $results[] = $result->fetch_assoc();
-                               $result->free();
-                           }
-                       } while ($conn->more_results() && $conn->next_result());
-                   
-                       // Display the counts
-                       echo '<span id="help"><h1>Admin Dashboard</h1><br/>
-                             <h2>Total Users: ' . $results[0]["TotalUsers"] . '</h2><br/>
-                             <h2>Total Matches: ' . $results[1]["TotalMatches"] . '</h2><br/>
-                             <h2>Total Feedback: ' . $results[2]["TotalFeedbacks"] . '</h2><br/>
-                             <h2>Pending Withdrawal Requests: ' . $results[3]["TotalWithdrawal"] . '</h2><br/></span>';
-                   } else {
-                       die('Query execution failed: ' . $conn->error);
-                   }
+                            SELECT COUNT(MatchID) AS TotalMatches FROM matches;
+                            SELECT COUNT(FeedbackID) AS TotalFeedbacks FROM feedback;
+                            SELECT COUNT(WithdrawalID) AS TotalWithdrawal FROM withdrawal;";
+
+                    // Execute the multi-query
+                    if (mysqli_multi_query($conn, $sql)) {
+                        // Store the result set
+                        if ($result = mysqli_store_result($conn)) {
+                            // Fetch the results
+                            $row = mysqli_fetch_assoc($result);
+
+                            // Display the counts
+                            echo '<span id="help"><h1>Admin Dashboard</h1><br/>
+                                    <h2>Total Users: ' . $row['TotalUsers'] . '</h2><br/>
+                                    <h2>Total Matches: ' . $row['TotalMatches'] . '</h2><br/>
+                                    <h2>Total Feedback: ' . $row['TotalFeedbacks'] . '</h2><br/>
+                                    <h2>Pending Withdrawal Requests: ' . $row['TotalWithdrawal'] . '</h2><br/></span>';
+                            
+                            // Free the result set
+                            mysqli_free_result($result);
+                        }
+                    } else {
+                        die('Query execution failed: ' . mysqli_error($conn));
+                    }
+
+                    // Close the database connection
+                    mysqli_close($conn);
                    
             echo'</main>
                 </div>

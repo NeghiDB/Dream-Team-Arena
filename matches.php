@@ -72,11 +72,11 @@ echo'
                     $sql = "";
                     for ($i = 1; $i <= 11; $i++) {
                         $sql .= "SELECT h.FullName AS HomePlayerName, h.PlayerPoint AS HomePlayerPoint, a.FullName AS AwayPlayerName, a.PlayerPoint AS AwayPlayerPoint
-                                FROM Matches AS m
-                                JOIN Team AS ht ON m.HomeTeamID = ht.TeamID
-                                JOIN Team AS at ON m.AwayTeamID = at.TeamID
-                                JOIN Players AS h ON ht.PlayerID$i = h.PlayerID
-                                JOIN Players AS a ON at.PlayerID$i = a.PlayerID
+                                FROM matches AS m
+                                JOIN team AS ht ON m.HomeTeamID = ht.TeamID
+                                JOIN team AS at ON m.AwayTeamID = at.TeamID
+                                JOIN players AS h ON ht.PlayerID$i = h.PlayerID
+                                JOIN players AS a ON at.PlayerID$i = a.PlayerID
                                 WHERE m.HomeTeamID = ht.TeamID
                                 AND m.AwayTeamID = at.TeamID
                                 AND (ht.OwnerID = $userid OR at.OwnerID = $userid)
@@ -123,10 +123,10 @@ echo'
             <br> <hr> <br>
             <form action="" method="get">';
             $sql = "SELECT m.HomeTeamID, m.AwayTeamID, t.OwnerID, 
-            (SELECT t1.TeamName FROM Team AS t1 WHERE m.HomeTeamID = t1.TeamID) AS HomeTeamName,
-            (SELECT t2.TeamName FROM Team AS t2 WHERE m.AwayTeamID = t2.TeamID) AS AwayTeamName
-            FROM Team AS t
-            JOIN Matches AS m ON t.TeamID = m.HomeTeamID OR t.TeamID = m.AwayTeamID
+            (SELECT t1.TeamName FROM team AS t1 WHERE m.HomeTeamID = t1.TeamID) AS HomeTeamName,
+            (SELECT t2.TeamName FROM team AS t2 WHERE m.AwayTeamID = t2.TeamID) AS AwayTeamName
+            FROM team AS t
+            JOIN matches AS m ON t.TeamID = m.HomeTeamID OR t.TeamID = m.AwayTeamID
             WHERE t.OwnerID = $userid
             ORDER BY m.MatchID DESC
             LIMIT 1";

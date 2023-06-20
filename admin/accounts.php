@@ -6,25 +6,29 @@ if (isset($_POST["credit"])) {
     $amount = $_POST["amount"];
 
     if ($userid == 'E') {
-        $sql = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (0, 'Credit', ?);
-                UPDATE user SET amount = (amount + ?);";
+        $sql1 = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (0, 'Credit', ?)";
+        $sql2 = "UPDATE user SET amount = (amount + ?)";
     } else {
-        $sql = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (?, 'Credit', ?);
-                UPDATE user SET amount = amount + ? WHERE UserID = ?;";
+        $sql1 = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (?, 'Credit', ?)";
+        $sql2 = "UPDATE user SET amount = amount + ? WHERE UserID = ?";
     }
 
-    // Prepare the statement
-    $stmt = $conn->prepare($sql);
+    // Prepare the first statement
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->bind_param("ds", $userid, $amount);
 
-    // Bind the parameters
-    if ($userid == 'E') {
-        $stmt->bind_param("dd", $amount, $amount);
-    } else {
-        $stmt->bind_param("sdds", $userid, $amount, $amount, $userid);
-    }
+    // Execute the first statement
+    $stmt1->execute();
 
-    // Execute the statement
-    if ($stmt->execute()) {
+    // Prepare the second statement
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->bind_param("ds", $amount, $userid);
+
+    // Execute the second statement
+    $stmt2->execute();
+
+    // Check if both statements were successful
+    if ($stmt1->affected_rows > 0 && $stmt2->affected_rows > 0) {
         echo "<script>
             location.href='dashboard.php';
             alert('UserID $userid has been given $amount');
@@ -32,27 +36,36 @@ if (isset($_POST["credit"])) {
     } else {
         echo "<script>
             location.href='dashboard.php';
-            alert('Error: ' . $stmt->error);
+            alert('Error: ' . $conn->error);
         </script>";
     }
 
-    // Close the statement
-    $stmt->close();
+    // Close the statements
+    $stmt1->close();
+    $stmt2->close();
 } elseif (isset($_POST["debit"])) {
     $userid = $_POST["userid"];
     $amount = $_POST["amount"];
 
-    $sql = "UPDATE user SET amount = amount - ? WHERE UserID = ?;
-            INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (?, 'Debit', ?);";
+    $sql1 = "UPDATE user SET amount = amount - ? WHERE UserID = ?";
+    $sql2 = "INSERT INTO accounts (UserID, TransactionType, Amount) VALUES (?, 'Debit', ?)";
 
-    // Prepare the statement
-    $stmt = $conn->prepare($sql);
+    // Prepare the first statement
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->bind_param("ds", $amount, $userid);
 
-    // Bind the parameters
-    $stmt->bind_param("dsss", $amount, $userid, $userid, $amount);
+    // Execute the first statement
+    $stmt1->execute();
 
-    // Execute the statement
-    if ($stmt->execute()) {
+    // Prepare the second statement
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->bind_param("ds", $userid, $amount);
+
+    // Execute the second statement
+    $stmt2->execute();
+
+    // Check if both statements were successful
+    if ($stmt1->affected_rows > 0 && $stmt2->affected_rows > 0) {
         echo "<script>
             location.href='dashboard.php';
             alert('UserID $userid has been deducted $amount');
@@ -60,12 +73,13 @@ if (isset($_POST["credit"])) {
     } else {
         echo "<script>
             location.href='dashboard.php';
-            alert('Error: ' . $stmt->error);
+            alert('Error: ' . $conn->error);
         </script>";
     }
 
-    // Close the statement
-    $stmt->close();
+    // Close the statements
+    $stmt1->close();
+    $stmt2->close();
 }
 
 require_once "../connections/disconnection.php";

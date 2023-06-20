@@ -4,7 +4,7 @@
     if (isset($_POST["new"])) {
         $email = $_POST["email"];
         $username = $_POST["username"];
-        $phone = $_POST["phone"];
+        $phone = $_POST["phonenumber"];
         $newpassword = $_POST["newpassword"];
         $confpassword = $_POST["confpassword"];
 
