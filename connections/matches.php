@@ -12,61 +12,84 @@
         $amount = $_SESSION['amount'];
 
         if (isset($_POST["start"])) {
-            // Update the home team's account amount for result = 1
-            $sql = "ALTER TABLE `user` DROP COLUMN `Plays`;
-                    ALTER TABLE `user` ADD COLUMN `Plays` INT(11) DEFAULT 1;";
+            $sql1 = "ALTER TABLE `user` DROP COLUMN `Plays`";
+            $stmt1 = $conn->prepare($sql1);
 
-            $stmt = $conn->prepare($sql);
+            if ($stmt1->execute()) {
+                $stmt1->close();
 
-            if ($stmt->execute()) {
-                $stmt->close();
+                $sql2 = "ALTER TABLE `user` ADD COLUMN `Plays` INT(11) DEFAULT 1";
+                $stmt2 = $conn->prepare($sql2);
 
-                // Redirect with success message
-                header("Location: ../admin/dashboard.php?success=matches-started");
-                exit;
+                if ($stmt2->execute()) {
+                    $stmt2->close();
+
+                    // Redirect with success message
+                    header("Location: ../admin/dashboard.php?success=matches-started");
+                    exit;
+                } else {
+                    // Log and display error message
+                    error_log("Error starting matches: " . $stmt2->error);
+                    header("Location: ../admin/dashboard.php?error=matches-start-failed");
+                    exit;
+                }
             } else {
                 // Log and display error message
-                error_log("Error starting matches: " . $stmt->error);
+                error_log("Error starting matches: " . $stmt1->error);
                 header("Location: ../admin/dashboard.php?error=matches-start-failed");
                 exit;
             }
-        } elseif (isset($_POST["end"])) {
-            $sql = "UPDATE `team` AS t
-                    JOIN (
-                        SELECT `TeamID`, SUM(`players`.`PlayerPoint`) AS `TotalPoints`
-                        FROM `players`
-                        JOIN `team` ON `players`.`playerid` IN (
-                            `team`.`PlayerID1`, `team`.`PlayerID2`, `team`.`PlayerID3`, `team`.`PlayerID4`, 
-                            `team`.`PlayerID5`, `team`.`PlayerID6`, `team`.`PlayerID7`, `team`.`PlayerID8`, 
-                            `team`.`PlayerID9`, `team`.`PlayerID10`, `team`.`PlayerID11`
-                        )
-                        GROUP BY `TeamID`
-                    ) AS p ON t.`TeamID` = p.`TeamID`
-                    SET t.`Points` = p.`TotalPoints`;
 
-                    UPDATE `matches`
-                    SET `Result` = (
-                        SELECT CASE
-                            WHEN `team1`.`Points` > `team2`.`Points` THEN 1
-                            WHEN `team1`.`Points` < `team2`.`Points` THEN 2
-                            ELSE 0
-                        END
-                        FROM (
-                            SELECT `TeamID`, `Points`
-                            FROM `team`
-                            JOIN `matches`
-                            WHERE `TeamID` = `matches`.`HomeTeamID`
-                        ) AS `team1`
-                        JOIN (
-                            SELECT `TeamID`, `Points`
-                            FROM `team`
-                            JOIN `matches`
-                            WHERE `TeamID` = `matches`.`AwayTeamID`
-                        ) AS `team2`
-                        ON 1 = 1
-                    );
-                    
-                    UPDATE `user` AS u
+        } elseif (isset($_POST["end"])) {
+            // Update the home team's account amount for result = 1
+            $sql1 = "UPDATE `team` AS t
+            JOIN (
+                SELECT `TeamID`, SUM(`players`.`PlayerPoint`) AS `TotalPoints`
+                FROM `players`
+                JOIN `team` ON `players`.`playerid` IN (
+                    `team`.`PlayerID1`, `team`.`PlayerID2`, `team`.`PlayerID3`, `team`.`PlayerID4`, 
+                    `team`.`PlayerID5`, `team`.`PlayerID6`, `team`.`PlayerID7`, `team`.`PlayerID8`, 
+                    `team`.`PlayerID9`, `team`.`PlayerID10`, `team`.`PlayerID11`
+                )
+                GROUP BY `TeamID`
+            ) AS p ON t.`TeamID` = p.`TeamID`
+            SET t.`Points` = p.`TotalPoints`";
+
+            $stmt1 = $conn->prepare($sql1);
+
+            if ($stmt1->execute()) {
+            $stmt1->close();
+
+            // Update the match results
+            $sql2 = "UPDATE `matches`
+                SET `Result` = (
+                    SELECT CASE
+                        WHEN `team1`.`Points` > `team2`.`Points` THEN 1
+                        WHEN `team1`.`Points` < `team2`.`Points` THEN 2
+                        ELSE 0
+                    END
+                    FROM (
+                        SELECT `TeamID`, `Points`
+                        FROM `team`
+                        JOIN `matches`
+                        WHERE `TeamID` = `matches`.`HomeTeamID`
+                    ) AS `team1`
+                    JOIN (
+                        SELECT `TeamID`, `Points`
+                        FROM `team`
+                        JOIN `matches`
+                        WHERE `TeamID` = `matches`.`AwayTeamID`
+                    ) AS `team2`
+                    ON 1 = 1
+                )";
+
+            $stmt2 = $conn->prepare($sql2);
+
+            if ($stmt2->execute()) {
+            $stmt2->close();
+
+            // Update user statistics
+            $sql3 = "UPDATE `user` AS u
                     SET u.Win = (
                         SELECT COUNT(*)
                         FROM `matches` AS m
@@ -94,40 +117,99 @@
                         FROM `matches` AS m
                         INNER JOIN `team` AS t ON (t.TeamID = m.HomeTeamID OR t.TeamID = m.AwayTeamID)
                         WHERE t.OwnerID = u.UserID AND m.Result = 0
-                    );
-                    
-                    UPDATE `Team` 
-                    SET PlayerID1 = NULL, PlayerID2 = NULL, PlayerID3 = NULL, PlayerID4 = NULL, PlayerID5 = NULL, 
-                        PlayerID6 = NULL, PlayerID7 = NULL, PlayerID8 = NULL, PlayerID9 = NULL, PlayerID10 = NULL, 
-                        PlayerID11 = NULL;
+                    )";
 
-                    ALTER TABLE `user` DROP COLUMN `Plays`;
-                    ALTER TABLE `user` ADD COLUMN `Plays` INT(11) DEFAULT 0;
-                    ";
+            $stmt3 = $conn->prepare($sql3);
 
-            $stmt = $conn->prepare($sql);
+            if ($stmt3->execute()) {
+            $stmt3->close();
 
-            if ($stmt->execute()) {
-                $stmt->close();
+            // Reset player IDs in team table
+            $sql4 = "UPDATE `team` 
+                        SET PlayerID1 = NULL, PlayerID2 = NULL, PlayerID3 = NULL, PlayerID4 = NULL, PlayerID5 = NULL, 
+                            PlayerID6 = NULL, PlayerID7 = NULL, PlayerID8 = NULL, PlayerID9 = NULL, PlayerID10 = NULL, 
+                            PlayerID11 = NULL";
 
-                // Generate and download CSV file
-                generateAndDownloadCSV($conn);
+            $stmt4 = $conn->prepare($sql4);
+
+            if ($stmt4->execute()) {
+                $stmt4->close();
+
+                // Update the 'Plays' column in the 'user' table
+                $sql5 = "ALTER TABLE `user` DROP COLUMN `Plays`";
+                $stmt5 = $conn->prepare($sql5);
+
+                if ($stmt5->execute()) {
+                    $stmt5->close();
+
+                    $sql6 = "ALTER TABLE `user` ADD COLUMN `Plays` INT(11) DEFAULT 0";
+                    $stmt6 = $conn->prepare($sql6);
+
+                    if ($stmt6->execute()) {
+                        $stmt6->close();
+
+                        // Generate and download CSV file
+                        generateAndDownloadCSV($conn);
+
+                        $sql7 = "TRUNCATE TABLE `matches` ";
+                        $stmt7 = $conn->prepare($sql7);
+
+                        if ($stmt7->execute()) {
+                            $stmt7->close();
+
+                        } else {
+                            // Log and display error message
+                            error_log("Error ending matches: " . $stmt7->error);
+                            header("Location: ../admin/dashboard.php?error=matches-end-failed");
+                            exit;
+                        }
+                    } else {
+                        // Log and display error message
+                        error_log("Error ending matches: " . $stmt6->error);
+                        header("Location: ../admin/dashboard.php?error=matches-end-failed");
+                        exit;
+                    }
+                } else {
+                    // Log and display error message
+                    error_log("Error ending matches: " . $stmt5->error);
+                    header("Location: ../admin/dashboard.php?error=matches-end-failed");
+                    exit;
+                }
             } else {
                 // Log and display error message
-                error_log("Error ending matches: " . $stmt->error);
+                error_log("Error ending matches: " . $stmt4->error);
                 header("Location: ../admin/dashboard.php?error=matches-end-failed");
                 exit;
             }
+            } else {
+            // Log and display error message
+            error_log("Error ending matches: " . $stmt3->error);
+            header("Location: ../admin/dashboard.php?error=matches-end-failed");
+            exit;
+            }
+            } else {
+            // Log and display error message
+            error_log("Error ending matches: " . $stmt2->error);
+            header("Location: ../admin/dashboard.php?error=matches-end-failed");
+            exit;
+            }
+            } else {
+            // Log and display error message
+            error_log("Error ending matches: " . $stmt1->error);
+            header("Location: ../admin/dashboard.php?error=matches-end-failed");
+            exit;
+            }
+
         }
     }
 
     function generateAndDownloadCSV($conn) {
         // Connect to the database using PDO
         $dbhost = "localhost";
-        $dbname = "dreamteamarena";
+        $dbname = "sneakyco_dreamteamarena";
         $dbchar = "utf8";
-        $dbuser = "root";
-        $dbpass = "";
+        $dbuser = "sneakyco_dreamteamarena";
+        $dbpass = "K=2oXF4Ft~Ce";
 
         try {
             $pdo = new PDO(

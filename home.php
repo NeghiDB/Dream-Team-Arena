@@ -68,80 +68,80 @@
                                 </thead>';
                                 /*Trying to link up to the player list*/
                                     $sql = "SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID1
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
 
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID2
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
                                     
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID3
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
                                     
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID4
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
 
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID5
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
 
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID6
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
 
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID7
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
                                     
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID8
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
                                     
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID9
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
 
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID10
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
                                     
                                     SELECT a.FullName, a.Club 
-                                    FROM Players AS a 
-                                    JOIN Team AS b
+                                    FROM players AS a 
+                                    JOIN team AS b
                                     ON a.PlayerID = b.PlayerID11
-                                    JOIN User AS c ON b.OwnerID = c.UserID 
+                                    JOIN user AS c ON b.OwnerID = c.UserID 
                                     WHERE c.UserID = $userid;
                                     ";
 

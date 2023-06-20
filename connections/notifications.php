@@ -5,10 +5,10 @@
         if (isset($_POST["withdrawal"])) {
             // Connect to the database
             $dbhost = "localhost";
-            $dbname = "dreamteamarena";
+            $dbname = "sneakyco_dreamteamarena";
             $dbchar = "utf8";
-            $dbuser = "root";
-            $dbpass = "";
+            $dbuser = "sneakyco_dreamteamarena";
+            $dbpass = "K=2oXF4Ft~Ce";
             $pdo = new PDO(
                 "mysql:host=$dbhost;dbname=$dbname;charset=$dbchar",
                 $dbuser, $dbpass, [
@@ -27,7 +27,7 @@
             fputcsv($fh, $withdrawalHeaders);
 
             // Get the team data from the database
-            $teamStmt = $pdo->prepare("SELECT * FROM Withdrawal");
+            $teamStmt = $pdo->prepare("SELECT * FROM withdrawal");
             $teamStmt->execute();
 
             // Output the team data to the CSV file
@@ -54,10 +54,10 @@
         elseif (isset($_POST["feedback"])) {
             // Connect to the database
             $dbhost = "localhost";
-            $dbname = "dreamteamarena";
+            $dbname = "sneakyco_dreamteamarena";
             $dbchar = "utf8";
-            $dbuser = "root";
-            $dbpass = "";
+            $dbuser = "sneakyco_dreamteamarena";
+            $dbpass = "K=2oXF4Ft~Ce";
             $pdo = new PDO(
                 "mysql:host=$dbhost;dbname=$dbname;charset=$dbchar",
                 $dbuser, $dbpass, [
@@ -76,7 +76,7 @@
             fputcsv($fh, $feedbackHeaders);
 
             // Get the team data from the database
-            $teamStmt = $pdo->prepare("SELECT * FROM Feedback");
+            $teamStmt = $pdo->prepare("SELECT * FROM feedback");
             $teamStmt->execute();
 
             // Output the team data to the CSV file
@@ -103,10 +103,10 @@
         elseif (isset($_POST["otp"])) {
             // Connect to the database
             $dbhost = "localhost";
-            $dbname = "dreamteamarena";
+            $dbname = "sneakyco_dreamteamarena";
             $dbchar = "utf8";
-            $dbuser = "root";
-            $dbpass = "";
+            $dbuser = "sneakyco_dreamteamarena";
+            $dbpass = "K=2oXF4Ft~Ce";
             $pdo = new PDO(
                 "mysql:host=$dbhost;dbname=$dbname;charset=$dbchar",
                 $dbuser, $dbpass, [
@@ -125,7 +125,7 @@
             fputcsv($fh, $otpHeaders);
 
             // Get the team data from the database
-            $teamStmt = $pdo->prepare("SELECT PhoneNumber, Email, OTP FROM User WHERE OTP > 0");
+            $teamStmt = $pdo->prepare("SELECT PhoneNumber, Email, OTP FROM user WHERE OTP > 0");
             $teamStmt->execute();
 
             // Output the team data to the CSV file

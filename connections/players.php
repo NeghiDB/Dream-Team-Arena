@@ -8,7 +8,7 @@ $amount = $_SESSION['amount'];
 $plays = $_SESSION['plays'];
 
 if (isset($_POST["play"])) {
-    if ($amount >= 500 && $plays < 1) {
+    if ($amount >= 1000 && $plays < 1) {
         $sql = "SELECT TeamID, OwnerID
         FROM team
         WHERE OwnerID = $userid
@@ -25,7 +25,7 @@ if (isset($_POST["play"])) {
             $teamID = $row['TeamID'];
             
             // Check if there is an available match slot
-            $matchSql = "SELECT MatchID, HomeTeamID FROM matches WHERE HomeTeamID IS NULL AND AwayTeamID IS NULL LIMIT 1";
+            $matchSql = "SELECT MatchID, HomeTeamID FROM matches WHERE HomeTeamID IS NOT NULL AND AwayTeamID IS NULL LIMIT 1";
             $matchResult = mysqli_query($conn, $matchSql);
             
             if ($matchResult === false) {
@@ -37,7 +37,7 @@ if (isset($_POST["play"])) {
                 $matchID = $matchRow['MatchID'];
                 
                 // Update the match with the home team ID
-                $updateSql = "UPDATE matches SET HomeTeamID = $teamID WHERE MatchID = $matchID";
+                $updateSql = "UPDATE matches SET AwayTeamID = $teamID WHERE MatchID = $matchID";
                 $updateResult = mysqli_query($conn, $updateSql);
                 
                 if ($updateResult === false) {
@@ -49,10 +49,10 @@ if (isset($_POST["play"])) {
                             location.href='../matches.php';
                             alert('You have been matched.');
                         </script>";
-                    $_SESSION['amount'] = $amount - 500;
+                    $_SESSION['amount'] = $amount - 1000;
                     $_SESSION['plays'] = $plays + 1;
                     
-                    $updateSql = "UPDATE user SET Amount = ($amount - 500), Plays = ($plays + 1) WHERE UserID = $userid";
+                    $updateSql = "UPDATE user SET Amount = ($amount - 1000), Plays = ($plays + 1) WHERE UserID = $userid";
                     $updateResult = mysqli_query($conn, $updateSql);
                     
                     if ($updateResult === false) {
@@ -78,10 +78,10 @@ if (isset($_POST["play"])) {
                             location.href='../matches.php';
                             alert('You have been matched.');
                         </script>";
-                    $_SESSION['amount'] = $amount - 500;
+                    $_SESSION['amount'] = $amount - 1000;
                     $_SESSION['plays'] = $plays + 1;
                     
-                    $updateSql = "UPDATE user SET Amount = ($amount - 500), Plays = ($plays + 1) WHERE UserID = $userid";
+                    $updateSql = "UPDATE user SET Amount = ($amount - 1000), Plays = ($plays + 1) WHERE UserID = $userid";
                     $updateResult = mysqli_query($conn, $updateSql);
                     
                     if ($updateResult === false) {
@@ -102,7 +102,7 @@ if (isset($_POST["play"])) {
         echo "<script>alert('You have already been matched.');
         window.open('../home.php','_self');</script>";
     } else {
-        echo "<script>alert('Insufficient funds. You need about 500 naira to play.');
+        echo "<script>alert('Insufficient funds. You need about 1000 naira to play.');
         window.open('https://paystack.com/pay/yqfni0l88j','_self');</script>";
     }
     

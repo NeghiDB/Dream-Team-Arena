@@ -85,7 +85,7 @@ echo'<!DOCTYPE html>
                             $sql = "SELECT a.playerid, a.FullName, a.Club, a.Position, b.GoalsScored, b.Assists, b.YellowCards, b.RedCards, b.CleanSheet, b.Minute 
                             FROM players AS a
                             JOIN playerperformance AS b ON a.playerid = b.PlayerID
-                            JOIN Player AS c ON a.playerid = c.playerid
+                            JOIN player AS c ON a.playerid = c.playerid
                             WHERE c.available = 'Yes'";
                             $result = mysqli_query($conn, $sql);
 
