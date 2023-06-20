@@ -1,18 +1,9 @@
 <?php
     require_once "../connections/connection.php";
-?>
 
-<?php
     session_start();
-    $userid = $_SESSION['userid'];
-    $username = $_SESSION['username'];
-    $amount = $_SESSION['amount'];
-    $phonenumber = $_SESSION['phonenumber'];
-    $email = $_SESSION['email'];
 ?>
 
-<?php
-echo'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,11 +17,11 @@ echo'
     <div id="settingsDiv">
         <img src="../images/DreamTeamArenaLogo.png">
         <form action="../connections/signup.php" method="post">
-            <input type="text" name="userID" id="userID" placeholder="User ID: '.$userid.'" disabled>
-            <input type="text" name="username" id="userName" placeholder="'.$username.'" required>
-            <input type="email" name="email" id="email" placeholder="'.$email.'" required>
-            <input type="tel" name="phonenumber" id="phonenumber" placeholder="'.$phonenumber.'" required>
-            <input type="text" name="amount" id="amount" placeholder="Amount: '.$amount.'" disabled>
+            <input type="text" name="userID" id="userID" placeholder="User ID: <?= $_SESSION['userid'] ?>" disabled>
+            <input type="text" name="username" id="userName" placeholder="<?= $_SESSION['username'] ?>" required>
+            <input type="email" name="email" id="email" placeholder="<?= $_SESSION['email'] ?>" required>
+            <input type="tel" name="phonenumber" id="phonenumber" placeholder="<?= $_SESSION['phonenumber'] ?>" required>
+            <input type="text" name="amount" id="amount" placeholder="Amount: <?= $_SESSION['amount'] ?>" disabled>
             <input type="text" name="accountnumber" id="accountNumber" placeholder="Enter Account Number">
             <input type="text" name="bankname" id="bankname" placeholder="Enter Bank Name">
             <input type="password" name="newpassword" id="newpassword" placeholder="Enter New Password" maxlength="10">
@@ -39,5 +30,4 @@ echo'
         </form>
     </div>
 </body>
-</html>';
-?>
+</html>
