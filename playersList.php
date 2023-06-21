@@ -58,7 +58,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th></th>
+                                <th>Check</th>
                                 <th>Player Name</th>
                                 <th title="Position">Pos.</th>
                                 <th>Team Name</th>
