@@ -1,6 +1,10 @@
 <?php
     require_once "connection.php";
 
+    if(empty($_SESSION['userid'])){
+        header("Location: ../index.html");
+    }
+
     session_start();
     $userid = $_SESSION['userid'];
     $amount = $_GET["Amount"];
