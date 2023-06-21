@@ -62,7 +62,7 @@ elseif (isset($_POST["forgotpassword"])){
         $updateSql = "UPDATE user SET OTP = '$otp' WHERE Email = '$email'";
 
         if (mysqli_query($conn, $updateSql)) {
-            echo "<script>alert('A password reset link has been sent to your email');
+            echo "<script>alert('A password reset link would be sent to your email within 24 hours');
                 window.open('../forgotpassword.html','_self');</script>";
         }
         else {
