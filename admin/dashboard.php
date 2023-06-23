@@ -92,7 +92,14 @@ if (mysqli_multi_query($conn, $sql)) {
 mysqli_close($conn);
 
                    
-            echo'</main>
+            echo'
+            <span class="tablespan">
+                <!-- HTML form for downloading notifications -->
+                <form action="../connections/notifications.php" method="POST"><br><br>
+                    <input type="submit" name="seeusers" value="View Users" style="margin-bottom: 20px;"><br>
+                </form>
+            </span>
+            </main>
                 </div>
                 <script src="../javascript/index.js"></script>
             </body>
