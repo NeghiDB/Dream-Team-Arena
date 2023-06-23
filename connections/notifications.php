@@ -149,6 +149,55 @@
             // Delete the CSV file from the server
             unlink('otp.csv');
         }
+        elseif (isset($_POST["seeusers"])) {
+            // Connect to the database
+            $dbhost = "localhost";
+            $dbname = "sneakyco_dreamteamarena";
+            $dbchar = "utf8";
+            $dbuser = "sneakyco_dreamteamarena";
+            $dbpass = "K=2oXF4Ft~Ce";
+            $pdo = new PDO(
+                "mysql:host=$dbhost;dbname=$dbname;charset=$dbchar",
+                $dbuser, $dbpass, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                ]
+            );
+
+            // Create an empty CSV file
+            $fh = fopen("users.csv","w");
+            if ($fh === false) {
+                exit("Failed to create CSV file");
+            }
+
+            // Define column headers for team table
+            $usersHeaders = ['PhoneNumber', 'Email', 'OTP'];
+            fputcsv($fh, $usersHeaders);
+
+            // Get the team data from the database
+            $teamStmt = $pdo->prepare("SELECT UserID, UserName, PhoneNumber, Email FROM user");
+            $teamStmt->execute();
+
+            // Output the team data to the CSV file
+            while ($teamRow = $teamStmt->fetch(PDO::FETCH_NAMED)) {
+                fputcsv($fh, [
+                    $teamRow['UserID'], $teamRow['UserName'], $teamRow['PhoneNumber'], $teamRow['Email']
+                ]);
+            }
+
+            // Close the CSV file
+            fclose($fh);
+
+            // Set headers to download the CSV file
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="users.csv"');
+            header('Content-Length: ' . filesize('users.csv'));
+
+            // Send the file to the browser for download
+            readfile('users.csv');
+
+            // Delete the CSV file from the server
+            unlink('users.csv');
+        }
     }
 
 ?>
