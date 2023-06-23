@@ -56,33 +56,41 @@
                 <main id="payperplaymain">';
                     // Prepare the SQL statements
                     $sql = "SELECT COUNT(UserID) AS TotalUsers FROM user;
-                            SELECT COUNT(MatchID) AS TotalMatches FROM matches;
-                            SELECT COUNT(FeedbackID) AS TotalFeedbacks FROM feedback;
-                            SELECT COUNT(WithdrawalID) AS TotalWithdrawal FROM withdrawal;";
+        SELECT COUNT(MatchID) AS TotalMatches FROM matches;
+        SELECT COUNT(FeedbackID) AS TotalFeedbacks FROM feedback;
+        SELECT COUNT(WithdrawalID) AS TotalWithdrawal FROM withdrawal;";
 
-                    // Execute the multi-query
-                    if (mysqli_multi_query($conn, $sql)) {
-                        // Store the result set
-                        if ($result = mysqli_store_result($conn)) {
-                            // Fetch the results
-                            $row = mysqli_fetch_assoc($result);
+// Execute the multi-query
+if (mysqli_multi_query($conn, $sql)) {
+    // Initialize an empty array to store the results
+    $results = array();
 
-                            // Display the counts
-                            echo '<span id="help"><h1>Admin Dashboard</h1><br/>
-                                    <h2>Total Users: ' . $row['TotalUsers'] . '</h2><br/>
-                                    <h2>Total Matches: ' . $row['TotalMatches'] . '</h2><br/>
-                                    <h2>Total Feedback: ' . $row['TotalFeedbacks'] . '</h2><br/>
-                                    <h2>Pending Withdrawal Requests: ' . $row['TotalWithdrawal'] . '</h2><br/></span>';
-                            
-                            // Free the result set
-                            mysqli_free_result($result);
-                        }
-                    } else {
-                        die('Query execution failed: ' . mysqli_error($conn));
-                    }
+    // Loop through the result sets
+    do {
+        // Store the result set
+        if ($result = mysqli_store_result($conn)) {
+            // Fetch the results
+            $row = mysqli_fetch_assoc($result);
+            // Add the row to the results array
+            $results[] = $row;
+            // Free the result set
+            mysqli_free_result($result);
+        }
+    } while (mysqli_next_result($conn));
 
-                    // Close the database connection
-                    mysqli_close($conn);
+    // Display the counts
+    echo '<span id="help"><h1>Admin Dashboard</h1><br/>
+            <h2>Total Users: ' . $results[0]['TotalUsers'] . '</h2><br/>
+            <h2>Total Matches: ' . $results[1]['TotalMatches'] . '</h2><br/>
+            <h2>Total Feedback: ' . $results[2]['TotalFeedbacks'] . '</h2><br/>
+            <h2>Pending Withdrawal Requests: ' . $results[3]['TotalWithdrawal'] . '</h2><br/></span>';
+} else {
+    die('Query execution failed: ' . mysqli_error($conn));
+}
+
+// Close the database connection
+mysqli_close($conn);
+
                    
             echo'</main>
                 </div>
