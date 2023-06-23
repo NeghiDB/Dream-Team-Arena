@@ -58,7 +58,7 @@
                     $sql = "SELECT COUNT(UserID) AS TotalUsers FROM user;
         SELECT COUNT(MatchID) AS TotalMatches FROM matches;
         SELECT COUNT(FeedbackID) AS TotalFeedbacks FROM feedback;
-        SELECT COUNT(WithdrawalID) AS TotalWithdrawal FROM withdrawal;";
+        SELECT COUNT(WithdrawalID) AS TotalWithdrawal FROM withdrawal WHERE Sent = 'No';";
 
 // Execute the multi-query
 if (mysqli_multi_query($conn, $sql)) {
