@@ -28,6 +28,7 @@ else{
         <body id="body">
             <div class="menu" id="menu">
                 <img src="../images/DreamTeamArenaLogo.png">
+                <span class="menubars" id="closemenubars" onclick="hideMenu()"><img src="../images/icons8-close-24.png" alt="" srcset=""></span>
                 <hr>
                 <ul class="menuul">
                     <a href="users.php"><button class="linx" title="Users"><li><i class="fa-solid fa-user"></i> Users</li></button></a>
