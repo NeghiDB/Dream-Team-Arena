@@ -170,7 +170,7 @@
             }
 
             // Define column headers for team table
-            $usersHeaders = ['PhoneNumber', 'Email', 'OTP'];
+            $usersHeaders = ['UserID', 'UserName', 'PhoneNumber', 'Email'];
             fputcsv($fh, $usersHeaders);
 
             // Get the team data from the database
