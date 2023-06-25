@@ -24,6 +24,7 @@
 <body id="body">
     <div class="menu" id="menu">
         <img src="images/DreamTeamArenaLogo.png">
+        <span class="menubars" id="closemenubars" onclick="hideMenu()"><img src="images/icons8-close-24.png" alt="" srcset=""></span>
         <hr>
         <ul class="menuul">
             <a href="home.php"><button class="linx" title="Home" id="active"><li><i class="fa-solid fa-house"></i> Home</li></button></a>
