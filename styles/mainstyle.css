@@ -33,7 +33,6 @@ button{
     color: black;
     cursor: pointer;
     box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
-    transition-duration: 1s;
 }
 button:hover{
     border: none;
@@ -106,7 +105,6 @@ hr{
 a{
     text-decoration: none;
     color: black;
-    transition: 1s;
 }
 a:hover, a:active{
     text-decoration: none;
@@ -302,6 +300,15 @@ tr:nth-child(2n){
         background-color: #fff;
         z-index: 1;
     }
+    #closemenubars{
+        visibility: hidden;
+        z-index: -1;
+        float: right;
+        width: 60px;
+        height: fit-content;
+        margin-left: -20%;
+        margin-top: 5%;
+    }
     img{
         width: 50%;
         height: 14%;
@@ -326,7 +333,6 @@ tr:nth-child(2n){
         color: black;
         cursor: pointer;
         box-shadow: 0 3px 3px 0 rgb(148, 148, 148);
-        transition-duration: 1s;
     }
     button:hover{
         border: none;
@@ -399,7 +405,6 @@ tr:nth-child(2n){
     a{
         text-decoration: none;
         color: black;
-        transition: 1s;
     }
     a:hover, a:active{
         text-decoration: none;
