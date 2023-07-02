@@ -157,6 +157,19 @@
                         if ($stmt7->execute()) {
                             $stmt7->close();
 
+                            $sql8 = "TRUNCATE TABLE `team` ";
+                            $stmt8 = $conn->prepare($sql8);
+
+                            if ($stmt8->execute()) {
+                                $stmt8->close();
+
+                            } else {
+                                // Log and display error message
+                                error_log("Error ending matches: " . $stmt8->error);
+                                header("Location: ../admin/dashboard.php?error=matches-end-failed");
+                                exit;
+                            }
+
                         } else {
                             // Log and display error message
                             error_log("Error ending matches: " . $stmt7->error);
