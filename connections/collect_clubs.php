@@ -30,13 +30,13 @@
 
                     // Access each selected club
                     foreach ($selectedClubs as $club) {
+                        // Execute the statement
+                        if ($stmt->execute()) {
+                            echo "<script>alert('Selected club players are now available');</script>";
+                        } else {
+                            echo "Error updating availability: " . $stmt->error;
+                        }
                         echo "Selected club: " . $club . "<br>";
-                    }
-                    // Execute the statement
-                    if ($stmt->execute()) {
-                        echo "<script>alert('Selected club players are now available');</script>";
-                    } else {
-                        echo "Error updating availability: " . $stmt->error;
                     }
 
                     // Close the statement
@@ -61,13 +61,13 @@
 
                     // Access each selected club
                     foreach ($selectedClubs as $club) {
+                        // Execute the statement
+                        if ($stmt->execute()) {
+                            echo "<script>alert('Selected club players are now unavailable');</script>";
+                        } else {
+                            echo "Error updating availability: " . $stmt->error;
+                        }
                         echo "Selected club: " . $club . "<br>";
-                    }
-                    // Execute the statement
-                    if ($stmt->execute()) {
-                        echo "<script>alert('Selected club players are now unavailable');</script>";
-                    } else {
-                        echo "Error updating availability: " . $stmt->error;
                     }
 
                     // Close the statement
